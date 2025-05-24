@@ -231,89 +231,21 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        .mascot-pig {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(45deg, #ffb3d9, #ff8fb3);
-            border-radius: 50%;
-            position: relative;
-            margin: 0 auto;
-            box-shadow: 0 0 40px rgba(100, 150, 200, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3);
+        .hero-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+            animation: heroMove 8s ease-in-out infinite;
         }
 
-        .pig-face {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .pig-snout {
-            width: 60px;
-            height: 40px;
-            background: #ff8fb3;
-            border-radius: 50%;
-            position: relative;
-            margin: 0 auto 10px;
-        }
-
-        .pig-snout::before,
-        .pig-snout::after {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 12px;
-            background: #cc6b99;
-            border-radius: 50%;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .pig-snout::before { left: 20px; }
-        .pig-snout::after { right: 20px; }
-
-        .pig-eyes {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .pig-eye {
-            width: 20px;
-            height: 20px;
-            background: black;
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .pig-eye::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            top: 3px;
-            left: 3px;
-        }
-
-        .pig-helmet {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 180px;
-            height: 120px;
-            background: linear-gradient(45deg, rgba(100, 150, 200, 0.3), rgba(255, 255, 255, 0.2));
-            border-radius: 50%;
-            border: 3px solid rgba(100, 150, 200, 0.6);
-            box-shadow: 0 0 20px rgba(100, 150, 200, 0.4);
+        .hero-image:hover {
+            transform: scale(1.05) rotate(2deg);
         }
 
         .fart-cloud {
             position: absolute;
-            bottom: -40px;
+            bottom: -20px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 2em;
@@ -323,15 +255,30 @@
 
         .space-trail {
             position: absolute;
-            bottom: -20px;
-            left: 60%;
+            bottom: 10px;
+            left: 70%;
             font-size: 1.5em;
             animation: trail 3s ease-in-out infinite;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
+            50% { transform: translateY(-30px) rotate(3deg); }
+        }
+
+        @keyframes heroMove {
+            0%, 100% { 
+                transform: translateX(0px) translateY(0px) rotate(0deg); 
+            }
+            25% { 
+                transform: translateX(10px) translateY(-15px) rotate(2deg); 
+            }
+            50% { 
+                transform: translateX(0px) translateY(-25px) rotate(0deg); 
+            }
+            75% { 
+                transform: translateX(-10px) translateY(-15px) rotate(-2deg); 
+            }
         }
 
         @keyframes fart {
@@ -348,8 +295,9 @@
         }
 
         @keyframes trail {
-            0% { opacity: 1; transform: translateX(0); }
-            100% { opacity: 0; transform: translateX(50px); }
+            0% { opacity: 1; transform: translateX(0) rotate(0deg); }
+            50% { opacity: 0.7; transform: translateX(20px) rotate(10deg); }
+            100% { opacity: 0.3; transform: translateX(40px) rotate(0deg); }
         }
 
         /* Contract Address */
@@ -668,18 +616,8 @@
                     </div>
                 </div>
                 <div class="mascot-container">
-                    <div class="mascot-pig">
-                        <div class="pig-helmet"></div>
-                        <div class="pig-face">
-                            <div class="pig-eyes">
-                                <div class="pig-eye"></div>
-                                <div class="pig-eye"></div>
-                            </div>
-                            <div class="pig-snout"></div>
-                        </div>
-                        <div class="fart-cloud">💨</div>
-                        <div class="space-trail">✨</div>
-                    </div>
+                    <img src="hero.png" alt="Moon Fart Hero" class="hero-image" />
+]
                 </div>
             </div>
         </div>
@@ -734,19 +672,10 @@
                         <p><strong>Features:</strong> Gaming, Rewards, NFTs</p>
                     </div>
                 </div>
-                <div class="mascot-container">
-                    <div class="mascot-pig">
-                        <div class="pig-helmet"></div>
-                        <div class="pig-face">
-                            <div class="pig-eyes">
-                                <div class="pig-eye"></div>
-                                <div class="pig-eye"></div>
-                            </div>
-                            <div class="pig-snout"></div>
-                        </div>
-                        <div class="fart-cloud">💨</div>
-                        <div class="space-trail">✨</div>
-                    </div>
+                <div >
+                 
+                    <img src="section.png" alt="Moon Fart Hero"/>
+
                 </div>
             </div>
         </div>
@@ -1280,6 +1209,7 @@
                         gameSpeed += 15;
                     }
                 }
+                
                 // Remove off-screen obstacles
                 return obstacle.x > -obstacle.width;
             });
