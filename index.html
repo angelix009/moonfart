@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Pig - The Galaxy is Ours</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0f17, #162028, #0a0f17);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 20, 25, 0.9);
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(100, 150, 200, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b9d, #22ff22, #c471ed, #12c2e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            margin-left: 20px;
+            color: #c8d6e8;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-follow {
+            background: linear-gradient(45deg, #1da1f2, #22ff22);
+            color: white;
+        }
+
+        .btn-telegram {
+            background: linear-gradient(45deg, #0088cc, #44ff44);
+            color: white;
+        }
+
+        .btn-play {
+            background: linear-gradient(45deg, #ff6b9d, #22ff22, #c471ed);
+            color: white;
+            font-size: 1.1em;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(34, 255, 34, 0.5); }
+            to { box-shadow: 0 0 20px rgba(34, 255, 34, 1), 0 0 30px rgba(34, 255, 34, 0.8); }
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 150, 200, 0.3);
+        }
+
+        /* Game Section */
+        .game-section {
+            background: linear-gradient(135deg, #0f1419, #1a2332, #0f1419);
+            padding: 40px 0;
+            margin: 40px 0;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(100, 150, 200, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 25px 15px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 75px 45px, rgba(180, 200, 255, 0.6), transparent),
+                radial-gradient(3px 3px at 110px 25px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 140px 65px, rgba(200, 220, 255, 0.5), transparent),
+                radial-gradient(2px 2px at 180px 35px, rgba(255, 255, 255, 0.6), transparent);
+            background-repeat: repeat;
+            background-size: 220px 80px;
+            animation: starsMove 50s linear infinite;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        .game-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            z-index: 2;
+        }
+
+        #gameCanvas {
+            border: 2px solid rgba(100, 150, 200, 0.4);
+            border-radius: 15px;
+            background: linear-gradient(135deg, #000428, #004e92);
+            display: block;
+            margin: 20px auto;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(100, 150, 200, 0.3);
+        }
+
+        .game-controls {
+            margin: 20px 0;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .score-display {
+            background: linear-gradient(45deg, rgba(30, 50, 80, 0.4), rgba(20, 35, 60, 0.6));
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 5px;
+            border: 1px solid rgba(100, 150, 200, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, #0f1419, #1a2332, #0f1419);
+            border-radius: 20px;
+            margin: 40px 0;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 15px 25px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(3px 3px at 65px 15px, rgba(180, 200, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 95px 55px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 125px 35px, rgba(200, 220, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 155px 5px, rgba(255, 255, 255, 0.7), transparent);
+            background-repeat: repeat;
+            background-size: 180px 70px;
+            animation: starsMove 55s linear infinite;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #22ff22, #c471ed, #12c2e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(200, 220, 255, 0.5);
+        }
+
+        .hero-text p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #c8d6e8;
+            line-height: 1.6;
+        }
+
+        .mascot-container {
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .mascot-pig {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #ffb3d9, #ff8fb3);
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 40px rgba(100, 150, 200, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .pig-face {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .pig-snout {
+            width: 60px;
+            height: 40px;
+            background: #ff8fb3;
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto 10px;
+        }
+
+        .pig-snout::before,
+        .pig-snout::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            background: #cc6b99;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .pig-snout::before { left: 20px; }
+        .pig-snout::after { right: 20px; }
+
+        .pig-eyes {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .pig-eye {
+            width: 20px;
+            height: 20px;
+            background: black;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .pig-eye::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+        }
+
+        .pig-helmet {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(45deg, rgba(100, 150, 200, 0.3), rgba(255, 255, 255, 0.2));
+            border-radius: 50%;
+            border: 3px solid rgba(100, 150, 200, 0.6);
+            box-shadow: 0 0 20px rgba(100, 150, 200, 0.4);
+        }
+
+        .fart-cloud {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            animation: fart 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(100, 150, 200, 0.6));
+        }
+
+        .space-trail {
+            position: absolute;
+            bottom: -20px;
+            left: 60%;
+            font-size: 1.5em;
+            animation: trail 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        @keyframes fart {
+            0%, 100% { 
+                opacity: 0.5; 
+                transform: translateX(-50%) scale(1); 
+                filter: drop-shadow(0 0 10px rgba(100, 150, 200, 0.6));
+            }
+            50% { 
+                opacity: 1; 
+                transform: translateX(-50%) scale(1.3); 
+                filter: drop-shadow(0 0 20px rgba(100, 150, 200, 0.8));
+            }
+        }
+
+        @keyframes trail {
+            0% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(50px); }
+        }
+
+        /* Contract Address */
+        .contract-section {
+            background: linear-gradient(45deg, rgba(30, 50, 80, 0.3), rgba(20, 35, 60, 0.5));
+            padding: 20px;
+            border-radius: 15px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 150, 200, 0.3);
+        }
+
+        .contract-address {
+            font-family: monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+            background: rgba(15, 25, 40, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(100, 150, 200, 0.4);
+        }
+
+        /* Platform Icons */
+        .platforms {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .platform-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, rgba(30, 50, 80, 0.4), rgba(20, 35, 60, 0.6));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid rgba(100, 150, 200, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .platform-icon:hover {
+            background: linear-gradient(45deg, rgba(40, 70, 110, 0.6), rgba(30, 50, 90, 0.8));
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(100, 150, 200, 0.6);
+            border-color: rgba(150, 180, 220, 0.7);
+        }
+
+        /* About Section */
+        .about-section {
+            background: linear-gradient(135deg, #0f1419, #1a2332, #0f1419);
+            padding: 60px 0;
+            margin: 60px 0;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(180, 200, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(200, 220, 255, 0.5), transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.6), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: starsMove 60s linear infinite;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        @keyframes starsMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-200px); }
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-text h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #e8f0ff;
+            text-shadow: 0 0 20px rgba(200, 220, 255, 0.3);
+        }
+
+        .about-text p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #c8d6e8;
+        }
+
+        .project-details {
+            background: linear-gradient(135deg, rgba(30, 50, 80, 0.4), rgba(20, 35, 60, 0.6));
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 1px solid rgba(100, 150, 200, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .project-details h3 {
+            color: #e8f0ff;
+            margin-bottom: 15px;
+        }
+
+        .project-details p {
+            margin-bottom: 8px;
+            color: #b8c6d8;
+        }
+
+        /* Legend Section */
+        .legend-section {
+            background: linear-gradient(135deg, #0f1419, #1a2332, #0f1419);
+            padding: 60px 0;
+            border-radius: 20px;
+            margin: 60px 0;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legend-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(3px 3px at 30px 20px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 80px 60px, rgba(180, 200, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 120px 10px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 170px 90px, rgba(200, 220, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 50px 100px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 10px 70px, rgba(180, 200, 255, 0.5), transparent);
+            background-repeat: repeat;
+            background-size: 180px 120px;
+            animation: starsMove 45s linear infinite reverse;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .legend-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .legend-text h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #e8f0ff;
+            text-shadow: 0 0 20px rgba(200, 220, 255, 0.3);
+        }
+
+        .legend-text p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #c8d6e8;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(15, 20, 25, 0.9);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(100, 150, 200, 0.3);
+        }
+
+        .disclaimer {
+            font-size: 0.9em;
+            color: #888;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content,
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5em;
+            }
+            
+            .logo {
+                font-size: 2em;
+            }
+            
+            .platforms {
+                flex-wrap: wrap;
+            }
+
+            #gameCanvas {
+                width: 100%;
+                max-width: 400px;
+                height: 300px;
+            }
+        }
+
+        /* Particles Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(100, 150, 200, 0.8);
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Space Gas Effects */
+        .space-gas {
+            position: absolute;
+            font-size: 1.2em;
+            animation: spaceGas 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes spaceGas {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            50% { opacity: 1; transform: translateY(-50px) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div style="display: flex; align-items: center;">
+                    <div class="logo">moonfart</div>
+                    <div class="tagline">The galaxy is ours... 💨🚀</div>
+                </div>
+                <div class="social-buttons">
+                    <button class="btn btn-play" onclick="scrollToGame()">
+                        🎮 Play Fart Game
+                    </button>
+                    <a href="#" class="btn btn-follow">
+                        <span>✕</span> Follow
+                    </a>
+                    <a href="#" class="btn btn-telegram">
+                        <span>✈</span> Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Moon Fart</h1>
+                    <p>The next-generation meme coin combining gaming, community rewards, and cosmic humor. Powered by Captain Bacon's legendary space technology. 🐷🚀</p>
+                    
+                    <div class="contract-section">
+                        <p><strong>Contract Address:</strong></p>
+                        <div class="contract-address">
+                            YOUR_CONTRACT_ADDRESS_HERE
+                        </div>
+                    </div>
+
+                    <div class="platforms">
+                        <div class="platform-icon" title="CoinMarketCap">📊</div>
+                        <div class="platform-icon" title="CoinGecko">🦎</div>
+                        <div class="platform-icon" title="SolScan">🔍</div>
+                        <div class="platform-icon" title="DexTools">🔧</div>
+                        <div class="platform-icon" title="Uniswap">🦄</div>
+                    </div>
+                </div>
+                <div class="mascot-container">
+                    <div class="mascot-pig">
+                        <div class="pig-helmet"></div>
+                        <div class="pig-face">
+                            <div class="pig-eyes">
+                                <div class="pig-eye"></div>
+                                <div class="pig-eye"></div>
+                            </div>
+                            <div class="pig-snout"></div>
+                        </div>
+                        <div class="fart-cloud">💨</div>
+                        <div class="space-trail">✨</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section class="game-section" id="gameSection">
+        <div class="container">
+            <div class="game-container">
+                <h2 style="color: #e8f0ff; margin-bottom: 20px; font-size: 2.5em; text-shadow: 0 0 20px rgba(200, 220, 255, 0.3);">🐷 Space Fart Adventure 🚀</h2>
+                <p style="margin-bottom: 20px; color: #c8d6e8;">Help Captain Bacon navigate through space using cosmic propulsion!</p>
+                
+                <div class="game-info">
+                    <div class="score-display">
+                        <strong>Score: <span id="currentScore">0</span></strong>
+                    </div>
+                    <div class="score-display">
+                        <strong>Best: <span id="bestScore">0</span></strong>
+                    </div>
+                </div>
+
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+                <div class="game-controls">
+                    <button class="btn btn-play" id="startBtn">🎮 Start Cosmic Journey</button>
+                    <button class="btn btn-follow" id="resetBtn">🔄 Reset</button>
+                </div>
+
+                <p style="color: #c8d6e8; margin-top: 15px;">
+                    <strong>Controls:</strong> Click anywhere or press SPACE to activate cosmic propulsion! 💨⭐
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About Moon Fart</h2>
+                    <p>Moon Fart ($MOONFART) is a decentralized memecoin that combines humor with community-driven innovation. Our mission is to create a fun, engaging cryptocurrency experience powered by cosmic humor.</p>
+                    
+                    <p>Built on Solana for lightning-fast transactions and low fees, Moon Fart brings together storytelling, gaming, and community rewards in one unique ecosystem.</p>
+
+                    <div class="project-details">
+                        <h3>Project Overview</h3>
+                        <p><strong>Token:</strong> $MOONFART</p>
+                        <p><strong>Blockchain:</strong> Solana</p>
+                        <p><strong>Type:</strong> Community Meme Token</p>
+                        <p><strong>Launch:</strong> 2025</p>
+                        <p><strong>Features:</strong> Gaming, Rewards, NFTs</p>
+                    </div>
+                </div>
+                <div class="mascot-container">
+                    <div class="mascot-pig">
+                        <div class="pig-helmet"></div>
+                        <div class="pig-face">
+                            <div class="pig-eyes">
+                                <div class="pig-eye"></div>
+                                <div class="pig-eye"></div>
+                            </div>
+                            <div class="pig-snout"></div>
+                        </div>
+                        <div class="fart-cloud">💨</div>
+                        <div class="space-trail">✨</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legend Section -->
+    <section class="legend-section">
+        <div class="container">
+            <div class="legend-content">
+                <h2>The Origin Story</h2>
+                <p>In a distant galaxy, Captain Bacon discovered that his unique "propulsion system" could power interstellar travel. What started as an embarrassing farm incident became the foundation of the most revolutionary space technology ever conceived.</p>
+                
+                <p>Now, this legendary space pig has become the symbol of Moon Fart - representing innovation, humor, and the belief that even the most unconventional ideas can reach the stars.</p>
+                
+                <p>Join Captain Bacon's mission to explore the cosmos, one cosmic emission at a time. The galaxy awaits those brave enough to embrace the power of cosmic gas propulsion!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="disclaimer">
+                <p>Moon Fart is a meme coin, it is not a financial instrument, and you should not mortgage your assets to buy it. Prices may fluctuate significantly. This is a community-powered project rooted in humor and creativity. Do your own research, not financial advice.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Game Variables
+        let canvas, ctx;
+        let gameState = 'menu'; // menu, playing, gameOver
+        let pig, obstacles, score, bestScore;
+        let gameSpeed = 150; // pixels per second - plus rapide
+        let animationId;
+        let poops = []; // Array to store falling poop
+        let fartEffects = []; // Array to store fart effects
+        let lastTime = 0;
+        let deltaTime = 0;
+
+        // Audio and Image setup
+        let fartSound, poopSound;
+        let pigImage, poopImage;
+        
+        function initAssets() {
+            try {
+                // Audio
+                fartSound = new Audio('fart.mp3');
+                poopSound = new Audio('poop.mp3');
+                fartSound.volume = 0.3;
+                poopSound.volume = 0.3;
+                
+                // Images
+                pigImage = new Image();
+                pigImage.src = 'pig.png';
+                
+                poopImage = new Image();
+                poopImage.src = 'poop.png';
+                
+            } catch (error) {
+                console.log('Assets not found, continuing without them');
+            }
+        }
+
+        function playFartSound() {
+            if (fartSound) {
+                fartSound.currentTime = 0;
+                fartSound.play().catch(e => console.log('Could not play fart sound'));
+            }
+        }
+
+        function playPoopSound() {
+            if (poopSound) {
+                poopSound.currentTime = 0;
+                poopSound.play().catch(e => console.log('Could not play poop sound'));
+            }
+        }
+
+        // Poop class
+        class Poop {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 20;
+                this.height = 20;
+                this.velocity = 0;
+                this.gravity = 180; // pixels per second squared
+                this.rotation = 0;
+                this.rotationSpeed = 3; // radians per second
+            }
+
+            update(deltaTime) {
+                this.velocity += this.gravity * deltaTime;
+                this.y += this.velocity * deltaTime;
+                this.rotation += this.rotationSpeed * deltaTime;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x + this.width/2, this.y + this.height/2);
+                ctx.rotate(this.rotation);
+                
+                if (poopImage && poopImage.complete) {
+                    ctx.drawImage(poopImage, -this.width/2, -this.height/2, this.width, this.height);
+                } else {
+                    // Fallback emoji
+                    ctx.font = '20px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('💩', 0, 5);
+                }
+                
+                ctx.restore();
+            }
+
+            isOffScreen() {
+                return this.y > canvas.height;
+            }
+        }
+
+        // Fart Effect class
+        class FartEffect {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 25;
+                this.height = 15;
+                this.opacity = 1;
+                this.scale = 1;
+                this.velocityX = -60; // pixels per second
+                this.velocityY = (Math.random() * 60 - 30); // pixels per second
+                this.life = 0.5; // seconds
+                this.maxLife = 0.5;
+            }
+
+            update(deltaTime) {
+                this.x += this.velocityX * deltaTime;
+                this.y += this.velocityY * deltaTime;
+                this.life -= deltaTime;
+                this.opacity = Math.max(0, this.life / this.maxLife);
+                this.scale = 1 + (1 - this.opacity) * 0.5;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x + this.width/2, this.y + this.height/2);
+                ctx.scale(this.scale, this.scale);
+                
+                // Draw fart cloud
+                ctx.fillStyle = '#22ff22';
+                ctx.shadowColor = '#22ff22';
+                ctx.shadowBlur = 10;
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('💨', 0, 5);
+                
+                ctx.restore();
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+        class Pig {
+            constructor() {
+                this.x = 100;
+                this.y = 200;
+                this.width = 35;
+                this.height = 35;
+                this.velocity = 0;
+                this.gravity = 300; // pixels per second squared
+                this.jumpPower = -240; // pixels per second
+                this.rotation = 0;
+            }
+
+            update(deltaTime) {
+                this.velocity += this.gravity * deltaTime;
+                this.y += this.velocity * deltaTime;
+
+                // Slight rotation based on velocity
+                this.rotation = this.velocity * 0.001;
+
+                // Keep pig on screen
+                if (this.y < 0) {
+                    this.y = 0;
+                    this.velocity = 0;
+                }
+                if (this.y > canvas.height - this.height) {
+                    this.y = canvas.height - this.height;
+                    endGame();
+                }
+            }
+
+            jump() {
+                this.velocity = this.jumpPower;
+                
+                // Play fart sound
+                playFartSound();
+                
+                // Create fart effects
+                for (let i = 0; i < 3; i++) {
+                    fartEffects.push(new FartEffect(
+                        this.x - 20 + Math.random() * 15,
+                        this.y + this.height/2 + Math.random() * 15
+                    ));
+                }
+                
+                // 20% chance to poop
+                if (Math.random() < 0.2) {
+                    poops.push(new Poop(this.x - 10, this.y + this.height));
+                    playPoopSound();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x + this.width/2, this.y + this.height/2);
+                ctx.rotate(this.rotation);
+                
+                if (pigImage && pigImage.complete) {
+                    // Draw pig image
+                    ctx.drawImage(pigImage, -this.width/2, -this.height/2, this.width, this.height);
+                } else {
+                    // Fallback drawing
+                    ctx.fillStyle = '#ffb3d9';
+                    ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height);
+                    
+                    // Draw space helmet glow
+                    ctx.strokeStyle = '#22ff22';
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = '#22ff22';
+                    ctx.shadowBlur = 8;
+                    ctx.beginPath();
+                    ctx.arc(0, -8, 18, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                    
+                    // Draw eyes with reflection
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(-7, -5, 3, 3);
+                    ctx.fillRect(4, -5, 3, 3);
+                    
+                    // Eye reflections
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(-7, -5, 1, 1);
+                    ctx.fillRect(4, -5, 1, 1);
+                    
+                    // Draw snout
+                    ctx.fillStyle = '#ff8fb3';
+                    ctx.fillRect(-4, 3, 8, 6);
+                    
+                    // Draw space suit details
+                    ctx.fillStyle = '#22ff22';
+                    ctx.fillRect(-1.5, 11, 3, 1);
+                }
+                
+                ctx.restore();
+            }
+        }
+
+        class Obstacle {
+            constructor(x) {
+                this.x = x;
+                this.width = 60;
+                this.gap = 150;
+                this.topHeight = Math.random() * (canvas.height - this.gap - 100) + 50;
+                this.bottomHeight = canvas.height - this.topHeight - this.gap;
+                this.crystalPositions = [];
+                this.passed = false;
+                
+                // Generate crystal positions
+                for (let i = 0; i < 8; i++) {
+                    this.crystalPositions.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.topHeight,
+                        size: Math.random() * 3 + 2,
+                        glow: Math.random() * 0.5 + 0.5,
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+                for (let i = 0; i < 8; i++) {
+                    this.crystalPositions.push({
+                        x: Math.random() * this.width,
+                        y: canvas.height - this.bottomHeight + Math.random() * this.bottomHeight,
+                        size: Math.random() * 3 + 2,
+                        glow: Math.random() * 0.5 + 0.5,
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            update(deltaTime) {
+                this.x -= gameSpeed * deltaTime;
+                
+                // Animate crystal glow
+                const time = Date.now() * 0.001;
+                this.crystalPositions.forEach(crystal => {
+                    crystal.glow = Math.sin(time * 2 + crystal.phase) * 0.3 + 0.7;
+                });
+            }
+
+            draw() {
+                // Draw main asteroid body with gradient
+                const gradient = ctx.createLinearGradient(this.x, 0, this.x + this.width, 0);
+                gradient.addColorStop(0, '#2a2a3a');
+                gradient.addColorStop(0.3, '#3a3a4a');
+                gradient.addColorStop(0.7, '#4a4a5a');
+                gradient.addColorStop(1, '#2a2a3a');
+                
+                ctx.fillStyle = gradient;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                ctx.shadowBlur = 15;
+                ctx.shadowOffsetX = 5;
+                ctx.shadowOffsetY = 5;
+                
+                // Top asteroid with rounded edges
+                this.drawRoundedRect(this.x, 0, this.width, this.topHeight, 8);
+                ctx.fill();
+                
+                // Bottom asteroid with rounded edges
+                this.drawRoundedRect(this.x, canvas.height - this.bottomHeight, this.width, this.bottomHeight, 8);
+                ctx.fill();
+                
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                
+                // Draw asteroid texture
+                ctx.fillStyle = '#5a5a6a';
+                for (let i = 0; i < 15; i++) {
+                    const x = this.x + (i * 17) % this.width;
+                    const y1 = (i * 23) % this.topHeight;
+                    const y2 = canvas.height - this.bottomHeight + (i * 29) % this.bottomHeight;
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y1, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y2, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Draw glowing crystals
+                this.crystalPositions.forEach(crystal => {
+                    ctx.save();
+                    ctx.globalAlpha = crystal.glow;
+                    ctx.fillStyle = '#22ff22';
+                    ctx.shadowColor = '#22ff22';
+                    ctx.shadowBlur = 10;
+                    
+                    ctx.beginPath();
+                    ctx.arc(this.x + crystal.x, crystal.y, crystal.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Inner bright core
+                    ctx.fillStyle = '#88ff88';
+                    ctx.shadowBlur = 5;
+                    ctx.beginPath();
+                    ctx.arc(this.x + crystal.x, crystal.y, crystal.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                });
+                
+                // Draw edges highlight
+                ctx.strokeStyle = '#6a6a7a';
+                ctx.lineWidth = 2;
+                this.drawRoundedRect(this.x, 0, this.width, this.topHeight, 8);
+                ctx.stroke();
+                this.drawRoundedRect(this.x, canvas.height - this.bottomHeight, this.width, this.bottomHeight, 8);
+                ctx.stroke();
+            }
+            
+            drawRoundedRect(x, y, width, height, radius) {
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            collidesWith(pig) {
+                return (pig.x < this.x + this.width &&
+                        pig.x + pig.width > this.x &&
+                        (pig.y < this.topHeight || pig.y + pig.height > canvas.height - this.bottomHeight));
+            }
+        }
+
+        // Space Gas Effect - Removed from game
+        /*
+        function createSpaceGas(x, y) {
+            const gasElement = document.createElement('div');
+            gasElement.className = 'space-gas';
+            gasElement.textContent = '💨';
+            gasElement.style.left = x + 'px';
+            gasElement.style.top = y + 'px';
+            gasElement.style.position = 'fixed';
+            gasElement.style.zIndex = '1000';
+            gasElement.style.color = '#22ff22';
+            gasElement.style.filter = 'drop-shadow(0 0 10px #22ff22)';
+            document.body.appendChild(gasElement);
+            
+            setTimeout(() => {
+                if (gasElement.parentNode) {
+                    gasElement.parentNode.removeChild(gasElement);
+                }
+            }, 4000);
+        }
+        */
+
+        // Game Functions
+        function initGame() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Initialize assets
+            initAssets();
+            
+            // Load best score
+            bestScore = localStorage.getItem('moonFartBestScore') || 0;
+            document.getElementById('bestScore').textContent = bestScore;
+            
+            resetGame();
+            setupControls();
+            gameLoop(0);
+        }
+
+        function resetGame() {
+            pig = new Pig();
+            obstacles = [];
+            poops = [];
+            fartEffects = [];
+            score = 0;
+            gameSpeed = 150; // vitesse plus rapide pour un gameplay dynamique
+            gameState = 'menu';
+            lastTime = 0;
+            document.getElementById('currentScore').textContent = score;
+        }
+
+        function startGame() {
+            if (gameState === 'menu' || gameState === 'gameOver') {
+                resetGame();
+                gameState = 'playing';
+            }
+        }
+
+        function endGame() {
+            gameState = 'gameOver';
+            
+            // Update best score
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('moonFartBestScore', bestScore);
+                document.getElementById('bestScore').textContent = bestScore;
+            }
+        }
+
+        function setupControls() {
+            // Button controls
+            document.getElementById('startBtn').addEventListener('click', startGame);
+            document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+            // Click and touch controls
+            canvas.addEventListener('click', () => {
+                if (gameState === 'playing') {
+                    pig.jump();
+                } else if (gameState === 'menu' || gameState === 'gameOver') {
+                    startGame();
+                }
+            });
+
+            // Keyboard controls
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    if (gameState === 'playing') {
+                        pig.jump();
+                    } else if (gameState === 'menu' || gameState === 'gameOver') {
+                        startGame();
+                    }
+                }
+            });
+        }
+
+        function updateGame(deltaTime) {
+            if (gameState !== 'playing') return;
+
+            pig.update(deltaTime);
+
+            // Update fart effects
+            fartEffects = fartEffects.filter(effect => {
+                effect.update(deltaTime);
+                return !effect.isDead();
+            });
+
+            // Update poops
+            poops = poops.filter(poop => {
+                poop.update(deltaTime);
+                return !poop.isOffScreen();
+            });
+
+            // Add new obstacles
+            if (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - 300) {
+                obstacles.push(new Obstacle(canvas.width));
+            }
+
+            // Update obstacles
+            obstacles = obstacles.filter(obstacle => {
+                obstacle.update(deltaTime);
+                
+                // Check collision
+                if (obstacle.collidesWith(pig)) {
+                    endGame();
+                }
+                
+                // Check if passed obstacle
+                if (obstacle.x + obstacle.width < pig.x && !obstacle.passed) {
+                    obstacle.passed = true;
+                    score++;
+                    document.getElementById('currentScore').textContent = score;
+                    
+                    // Increase speed gradually (15 pixels per second every 5 points)
+                    if (score % 5 === 0) {
+                        gameSpeed += 15;
+                    }
+                }
+                // Remove off-screen obstacles
+                return obstacle.x > -obstacle.width;
+            });
+        }
+
+        function drawGame() {
+            // Clear canvas with simple space gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#0a0a1a');
+            gradient.addColorStop(0.5, '#1a1a3a');
+            gradient.addColorStop(1, '#0a0a1a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw simple stars (much fewer) - time-based animation
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            const time = Date.now() * 0.001;
+            for (let i = 0; i < 30; i++) {
+                const x = (i * 67 + time * 5) % canvas.width;
+                const y = (i * 43) % canvas.height;
+                const size = Math.sin(time * 0.8 + i) * 0.3 + 0.7;
+                
+                ctx.save();
+                ctx.globalAlpha = size;
+                ctx.beginPath();
+                ctx.arc(x, y, 1, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Draw subtle green gas clouds (fewer and more transparent) - time-based
+            for (let i = 0; i < 3; i++) {
+                const x = (i * 200 + time * 2) % (canvas.width + 400);
+                const y = (i * 150) % canvas.height;
+                const size = 80 + Math.sin(time * 0.3 + i) * 20;
+                const opacity = 0.03 + Math.sin(time * 0.4 + i * 0.5) * 0.02;
+                
+                ctx.save();
+                ctx.globalAlpha = opacity;
+                
+                const nebulaGradient = ctx.createRadialGradient(x, y, 0, x, y, size);
+                nebulaGradient.addColorStop(0, '#22ff22');
+                nebulaGradient.addColorStop(0.7, '#116611');
+                nebulaGradient.addColorStop(1, 'transparent');
+                
+                ctx.fillStyle = nebulaGradient;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // One simple distant planet
+            ctx.save();
+            const planetX = canvas.width - 120;
+            const planetY = 80;
+            const planetRadius = 35;
+            
+            // Simple planet without too much glow
+            const planetGradient = ctx.createRadialGradient(planetX - 10, planetY - 10, 0, planetX, planetY, planetRadius);
+            planetGradient.addColorStop(0, 'rgba(34, 255, 34, 0.4)');
+            planetGradient.addColorStop(0.7, 'rgba(34, 255, 34, 0.2)');
+            planetGradient.addColorStop(1, 'rgba(17, 102, 17, 0.1)');
+            
+            ctx.fillStyle = planetGradient;
+            ctx.beginPath();
+            ctx.arc(planetX, planetY, planetRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Draw game objects
+            obstacles.forEach(obstacle => obstacle.draw());
+            fartEffects.forEach(effect => effect.draw());
+            poops.forEach(poop => poop.draw());
+            pig.draw();
+
+            // Draw UI with softer styling
+            ctx.save();
+            ctx.fillStyle = '#88ff88';
+            ctx.font = 'bold 24px Arial';
+            ctx.shadowColor = '#22ff22';
+            ctx.shadowBlur = 5;
+            
+            if (gameState === 'menu') {
+                ctx.textAlign = 'center';
+                
+                ctx.fillText('🐷 SPACE FART ADVENTURE 🚀', canvas.width/2, canvas.height/2 - 50);
+                
+                ctx.font = 'bold 18px Arial';
+                ctx.shadowBlur = 3;
+                ctx.fillStyle = '#aaffaa';
+                ctx.fillText('Click or press SPACE to start your cosmic journey!', canvas.width/2, canvas.height/2);
+                ctx.fillText('Use fart power to navigate through space! 💨✨', canvas.width/2, canvas.height/2 + 30);
+                
+            } else if (gameState === 'gameOver') {
+                ctx.textAlign = 'center';
+                
+                ctx.fillStyle = '#ff8888';
+                ctx.shadowColor = '#ff4444';
+                ctx.shadowBlur = 8;
+                ctx.fillText('💥 COSMIC CRASH! 💥', canvas.width/2, canvas.height/2 - 30);
+                
+                ctx.fillStyle = '#88ff88';
+                ctx.shadowColor = '#22ff22';
+                ctx.shadowBlur = 5;
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText(`Space Distance Traveled: ${score} light-years`, canvas.width/2, canvas.height/2);
+                ctx.fillText('Click or press SPACE to try again!', canvas.width/2, canvas.height/2 + 30);
+            }
+            
+            ctx.restore();
+            ctx.textAlign = 'left';
+        }
+
+        function gameLoop(currentTime) {
+            // Calculate delta time in seconds
+            if (lastTime === 0) lastTime = currentTime;
+            deltaTime = (currentTime - lastTime) / 1000;
+            lastTime = currentTime;
+            
+            // Cap delta time to prevent large jumps
+            deltaTime = Math.min(deltaTime, 0.033); // Max 33ms (30 FPS minimum)
+            
+            updateGame(deltaTime);
+            drawGame();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        // Utility Functions
+        function scrollToGame() {
+            document.getElementById('gameSection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 100;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                
+                // Some particles are blue gas clouds
+                if (Math.random() < 0.3) {
+                    particle.style.background = 'rgba(100, 150, 200, 0.8)';
+                    particle.style.width = '4px';
+                    particle.style.height = '4px';
+                    particle.style.boxShadow = '0 0 10px rgba(100, 150, 200, 0.8)';
+                }
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Interactive effects
+        document.querySelectorAll('.platform-icon').forEach(icon => {
+            icon.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.2) rotate(10deg)';
+            });
+            
+            icon.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Add floating space gas effects
+        function createFloatingGas() {
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const gas = document.createElement('div');
+                    gas.textContent = '💨';
+                    gas.style.position = 'fixed';
+                    gas.style.left = Math.random() * window.innerWidth + 'px';
+                    gas.style.top = window.innerHeight + 'px';
+                    gas.style.fontSize = Math.random() * 20 + 15 + 'px';
+                    gas.style.color = '#88aaff';
+                    gas.style.filter = 'drop-shadow(0 0 10px #88aaff)';
+                    gas.style.pointerEvents = 'none';
+                    gas.style.zIndex = '1';
+                    gas.style.animation = 'spaceGas 6s linear forwards';
+                    document.body.appendChild(gas);
+                    
+                    setTimeout(() => {
+                        if (gas.parentNode) {
+                            gas.parentNode.removeChild(gas);
+                        }
+                    }, 6000);
+                }
+            }, 2000);
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            createParticles();
+            createFloatingGas();
+            initGame();
+        });
+
+        // Add some interactivity to the mascot
+        document.querySelectorAll('.mascot-pig').forEach(pig => {
+            pig.addEventListener('click', function() {
+                // Play fart sound
+                playFartSound();
+                
+                // Create a temporary fart effect
+                const fart = document.createElement('div');
+                fart.textContent = '💨';
+                fart.style.position = 'absolute';
+                fart.style.bottom = '-60px';
+                fart.style.left = '50%';
+                fart.style.transform = 'translateX(-50%)';
+                fart.style.fontSize = '3em';
+                fart.style.color = '#22ff22';
+                fart.style.filter = 'drop-shadow(0 0 20px #22ff22)';
+                fart.style.animation = 'fart 1s ease-out forwards';
+                fart.style.zIndex = '100';
+                this.appendChild(fart);
+                
+                // 30% chance to poop when clicking mascot
+                if (Math.random() < 0.3) {
+                    setTimeout(() => {
+                        playPoopSound();
+                        const poop = document.createElement('div');
+                        poop.textContent = '💩';
+                        poop.style.position = 'absolute';
+                        poop.style.bottom = '-80px';
+                        poop.style.left = '45%';
+                        poop.style.fontSize = '2em';
+                        poop.style.animation = 'spaceGas 3s ease-out forwards';
+                        poop.style.zIndex = '100';
+                        this.appendChild(poop);
+                        
+                        setTimeout(() => {
+                            if (poop.parentNode) {
+                                poop.parentNode.removeChild(poop);
+                            }
+                        }, 3000);
+                    }, 500);
+                }
+                
+                setTimeout(() => {
+                    if (fart.parentNode) {
+                        fart.parentNode.removeChild(fart);
+                    }
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
